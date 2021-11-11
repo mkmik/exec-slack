@@ -3,6 +3,11 @@
 set -e
 set -x
 
+# default is 256, which can cause tests to fail
+echo "Setting ulimit..."
+ulimit -n 5000
+ulimit -a
+
 CLONE_DIR=/tmp/iox
 CARGO_PATH=$HOME/.cargo/bin/cargo 
 
