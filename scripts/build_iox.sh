@@ -4,10 +4,11 @@ set -e
 set -x
 
 CLONE_DIR=/tmp/iox
+CARGO_PATH=$HOME/.cargo/bin/cargo 
 
 echo "Checking build dependencies..."
 command -v clang >/dev/null || (echo "Installing clang..." && brew update && brew install clang)
-command -v cargo >/dev/null || (echo "Installing rustup..." && brew update && brew install rustup)
+command -v $CARGO_PATH >/dev/null || (echo "Rust needs to be installed" && exit 1)
 
 [ -d $CLONE_DIR ] && echo "Cleaning $CLONE_DIR" && rm -rf $CLONE_DIR
 echo "Creating $CLONE_DIR"
@@ -18,4 +19,4 @@ cd $CLONE_DIR
 git clone https://github.com/influxdata/influxdb_iox.git .
 
 echo "Running tests...\n"
-cargo test --workspace
+$CARGO_PATH test --workspace
