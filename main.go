@@ -26,7 +26,7 @@ func main() {
 
 	chStr := os.Getenv("SLACK_CHANNELS")
 	if len(chStr) == 0 {
-		log.Fatal("at least one Slack channel required via SLACK_CHANNELS")
+		log.Fatal("At least one Slack channel required via SLACK_CHANNELS")
 	}
 
 	if len(chStr) == 0 {
@@ -36,7 +36,7 @@ func main() {
 	log.Printf("Failures broadcast to channels: %v\n", channels)
 
 	if len(os.Args) < 2 {
-		log.Fatal("path to executable must be provided as argument")
+		log.Fatal("Path to executable must be provided as argument")
 	} else if len(os.Args) > 2 {
 		log.Println("WARN: executable args not currently supported")
 	}
@@ -45,7 +45,7 @@ func main() {
 	api := slack.New(apiKey)
 	resp, err := api.AuthTest()
 	if err != nil {
-		log.Fatal("unable to authenticate against Slack API")
+		log.Fatal("Unable to authenticate against Slack API")
 	}
 	log.Printf("Authenticated as %q\n", resp.User)
 
@@ -68,24 +68,38 @@ func main() {
 	select {}
 }
 
+var lastResult = true
+
 func execJob(api *slack.Client, job string) {
 	log.Printf("Running job: %q\n", job)
 	start := time.Now()
 	cmd := exec.Command(job)
 	stdoutStderr, err := cmd.CombinedOutput()
-	log.Println(err)
 
 	if err != nil {
 		api.UploadFile(slack.FileUploadParameters{Content: string(stdoutStderr), Filetype: "text", Title: "Run Output", Channels: channels, InitialComment: ":apple: IOx build failed on M1. Please see attached output."})
+	} else if !lastResult {
+		jobGreen(api)
 	}
+
 	log.Printf("Job finished in : %v. Succeeded: %v \n", time.Since(start), err == nil)
+	lastResult = (err == nil)
 }
 
 func checkin(api *slack.Client) {
 	log.Printf("Bot checking in with channels: %v\n", channels)
+	sendMessage(api, ":green_apple: checking in...")
+}
+
+func jobGreen(api *slack.Client) {
+	log.Println("Job status now good")
+	sendMessage(api, ":white_tick: Last job completed successfully.")
+}
+
+func sendMessage(api *slack.Client, msg string) {
 	for _, channel := range channels {
-		if _, _, err := api.PostMessage(channel, slack.MsgOptionText(":green_apple: checking in...", false), slack.MsgOptionAsUser(true)); err != nil {
-			log.Printf("checkin to channel %q failed: %v\n", channel, err)
+		if _, _, err := api.PostMessage(channel, slack.MsgOptionText(msg, false), slack.MsgOptionAsUser(true)); err != nil {
+			log.Printf("ERROR: Message %q to channel %q failed: %v\n", msg, channel, err)
 		}
 	}
 }
