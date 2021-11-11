@@ -7,8 +7,8 @@ CLONE_DIR=/tmp/iox
 CARGO_PATH=$HOME/.cargo/bin/cargo 
 
 # Required to use `arm64` system protoc 
-PROTOC=/opt/homebrew/bin/protoc 
-PROTOC_INCLUDE=/opt/homebrew/include
+export PROTOC=/opt/homebrew/bin/protoc 
+export PROTOC_INCLUDE=/opt/homebrew/include
 
 echo "Checking build dependencies..."
 command -v brew >/dev/null || (echo "Homebrew needs to be installed manually." && exit 1)
