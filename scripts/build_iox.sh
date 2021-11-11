@@ -11,9 +11,10 @@ PROTOC=/opt/homebrew/bin/protoc
 PROTOC_INCLUDE=/opt/homebrew/include
 
 echo "Checking build dependencies..."
-command -v clang >/dev/null || (echo "Installing clang..." && brew update && brew install clang)
-command -v $CARGO_PATH >/dev/null || (echo "Rust needs to be installed" && exit 1)
-command -v protoc >/dev/null || (echo "Installing protoc via protobuf package" && brew update && brew install protobuf)
+command -v brew >/dev/null || (echo "Homebrew needs to be installed manually." && exit 1)
+command -v $CARGO_PATH >/dev/null || (echo "Rust needs to be installed manually." && exit 1)
+command -v clang >/dev/null || (echo "Installing clang via Homebrew..." && brew update && brew install clang)
+command -v protoc >/dev/null || (echo "Installing protoc via Homebrew..." && brew update && brew install protobuf)
 
 
 [ -d $CLONE_DIR ] && echo "Cleaning $CLONE_DIR" && rm -rf $CLONE_DIR
