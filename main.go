@@ -40,10 +40,6 @@ func main() {
 	if len(chStr) == 0 {
 		log.Fatal("At least one Slack channel required via SLACK_CHANNELS")
 	}
-
-	if len(chStr) == 0 {
-		log.Fatal("at least one Slack channel required via SLACK_CHANNELS")
-	}
 	channels = strings.Split(chStr, ",")
 	log.Printf("Failures broadcast to channels: %v\n", channels)
 
