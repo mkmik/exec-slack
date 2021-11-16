@@ -1,7 +1,10 @@
 package main
 
 import (
+	_ "embed"
+	"fmt"
 	"log"
+	"math/rand"
 	"os"
 	"os/exec"
 	"strings"
@@ -18,7 +21,16 @@ const execInterval = time.Duration(3 * time.Hour)
 
 var channels []string
 
+var (
+	//go:embed checkin.txt
+	checkinMessagesBody string
+
+	checkinMessages = strings.Split(checkinMessagesBody, "\n")
+)
+
 func main() {
+	rand.Seed(time.Now().Unix())
+
 	apiKey := os.Getenv("SLACK_API_KEY")
 	if len(apiKey) == 0 {
 		log.Fatal("SLACK_API_KEY must be specified")
@@ -88,7 +100,8 @@ func execJob(api *slack.Client, job string) {
 
 func checkin(api *slack.Client) {
 	log.Printf("Bot checking in with channels: %v\n", channels)
-	sendMessage(api, ":green_apple: checking in...")
+	msg := checkinMessages[rand.Intn(len(checkinMessages))]
+	sendMessage(api, fmt.Sprintf(":green_apple: %s", msg))
 }
 
 func jobGreen(api *slack.Client) {
