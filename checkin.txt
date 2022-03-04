@@ -15,3 +15,4 @@ IOx on iOS?
 workingon: lobbying for an IOx CI for Android too; I feel lonely.
 A robot may not injure a human being or, through inaction, allow a human being to come to harm. I build IOx.
 goodread: All Systems Red (The Murderbot Diaries #1) by Martha Wells
+If you don't hear from me for another month, blame the macos kernel!
