@@ -85,7 +85,7 @@ func execJob(api *slack.Client, job string) {
 	stdoutStderr, err := cmd.CombinedOutput()
 
 	if err != nil {
-		api.UploadFile(slack.FileUploadParameters{Content: string(stdoutStderr), Filetype: "text", Title: "Run Output", Channels: channels, InitialComment: ":apple: IOx build failed on M1. Please see attached output."})
+		api.UploadFile(slack.FileUploadParameters{Content: string(stdoutStderr), Filetype: "text", Filename: "output.txt", Title: "Run Output", Channels: channels, InitialComment: ":apple: IOx build failed on M1. Please see attached output."})
 	} else if !lastResult {
 		jobGreen(api)
 	}
